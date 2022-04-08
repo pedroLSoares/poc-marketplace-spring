@@ -1,5 +1,6 @@
 package com.pedrolsoares.marketplace.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,7 +30,10 @@ public class AppUser {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
+
+
 
     public AppUser(String email, String name, String user_name, String password) {
         this.email = email;
