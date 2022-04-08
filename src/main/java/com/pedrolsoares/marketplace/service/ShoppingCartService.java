@@ -37,4 +37,14 @@ public class ShoppingCartService {
         return cart;
 
     }
+
+    public List<Product> getCart(String username){
+        Optional<ShoppingCart> cart = shoppingCartRepository.findById(username);
+
+        if(cart.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        return cart.get().getProducts();
+    }
 }

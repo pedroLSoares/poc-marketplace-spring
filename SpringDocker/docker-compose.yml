@@ -1,0 +1,31 @@
+version: '3'
+services:
+  postgres:
+    build: ../Docker/
+    image: bootcamp-marketplace-postgres
+    environment:
+      POSTGRES_PASSWORD: admin
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis:3.2.5-alpine
+    ports:
+      - 6379:6379
+
+  application:
+    build:
+      context: ../
+      dockerfile: ./SpringDocker/Dockerfile
+    image: bootcamp-marketplace-application
+    environment:
+      POSTGRES_URL: jdbc:postgresql://postgres:5432/marketplace_bootcamp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - 8080:8080

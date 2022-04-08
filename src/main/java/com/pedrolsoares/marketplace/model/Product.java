@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.pedrolsoares.marketplace.enums.ProductCategory;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,6 +36,9 @@ public class Product {
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column
+    private ProductCategory category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
