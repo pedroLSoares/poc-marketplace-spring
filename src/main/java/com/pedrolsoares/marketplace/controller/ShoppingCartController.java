@@ -1,5 +1,6 @@
 package com.pedrolsoares.marketplace.controller;
 
+import com.pedrolsoares.marketplace.dto.request.ShoppingCartDTO;
 import com.pedrolsoares.marketplace.dto.response.ProductDTO;
 import com.pedrolsoares.marketplace.model.Product;
 import com.pedrolsoares.marketplace.model.ShoppingCart;
@@ -19,8 +20,8 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
     @PostMapping("/{productId}")
-    public ResponseEntity<Object> addProductToCart(@PathVariable Long productId, Authentication authentication){
-        ShoppingCart cart = shoppingCartService.addProduct(authentication.getName(), productId);
+    public ResponseEntity<Object> addProductToCart(@RequestBody ShoppingCartDTO cartRequest, Authentication authentication){
+        ShoppingCart cart = shoppingCartService.addProduct(authentication.getName(), cartRequest);
 
         return ResponseEntity.ok(cart.getProducts().stream().map(ProductDTO::modelToDTO));
     }

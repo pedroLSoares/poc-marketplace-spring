@@ -40,6 +40,9 @@ public class Product {
     @Column
     private ProductCategory category;
 
+    @Transient
+    private Integer quantityRequested = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIdentityReference(alwaysAsId = true)

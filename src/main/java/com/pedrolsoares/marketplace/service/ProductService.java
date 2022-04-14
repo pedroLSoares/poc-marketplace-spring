@@ -6,6 +6,7 @@ import com.pedrolsoares.marketplace.model.Product;
 import com.pedrolsoares.marketplace.repository.ProductRepository;
 import com.pedrolsoares.marketplace.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.hibernate.PropertyNotFoundException;
 import org.springframework.data.domain.Example;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,11 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+
+    public Product findOne(Long id){
+        return productRepository.findById(id).orElseThrow(() -> new PropertyNotFoundException("Product not found"));
+    }
+
 
     public Product registerProduct(ProductDTO newProduct){
         Optional<AppUser> user = userRepository.findByUser_name(newProduct.getSellerUserName());
@@ -34,11 +40,12 @@ public class ProductService {
                 user.get()
         );
 
-        System.out.println(product);
 
         return productRepository.save(product);
+    }
 
-
+    public Product updateProduct(Product product){
+        return productRepository.save(product);
     }
 
     public List<Product> findAllById(Long id){
