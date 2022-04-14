@@ -2,6 +2,7 @@ package com.pedrolsoares.marketplace.controller;
 
 import com.pedrolsoares.marketplace.dto.request.ProductDTO;
 import com.pedrolsoares.marketplace.dto.response.PersonalProductsDTO;
+import com.pedrolsoares.marketplace.model.ESProduct;
 import com.pedrolsoares.marketplace.model.Product;
 import com.pedrolsoares.marketplace.service.ProductService;
 import com.pedrolsoares.marketplace.util.ProductEnumUtils;
@@ -21,14 +22,21 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping
+    public ResponseEntity<Object> listAll(@RequestParam String search){
+        List<ESProduct> products = productService.listAll(search);
+
+        return ResponseEntity.ok(products);
+    }
+
     @GetMapping("/{userId}")
     public ResponseEntity<List<PersonalProductsDTO>> listAllById(@PathVariable Long userId){
         List<Product> products = productService.findAllById(userId);
         return ResponseEntity.ok(PersonalProductsDTO.modelToDTO(products));
     }
 
-    @GetMapping
-    public ResponseEntity<List<PersonalProductsDTO>> listAll(Authentication authentication){
+    @GetMapping("/user")
+    public ResponseEntity<List<PersonalProductsDTO>> listAllUserProducts(Authentication authentication){
         List<Product> products = productService.findAllByUsername(authentication.getName());
         return ResponseEntity.ok(PersonalProductsDTO.modelToDTO(products));
     }
