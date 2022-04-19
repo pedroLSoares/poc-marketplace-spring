@@ -2,6 +2,7 @@ package com.pedrolsoares.marketplace.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pedrolsoares.marketplace.dto.request.StorageDTO;
+import com.pedrolsoares.marketplace.dto.request.StorageProductsDTO;
 import com.pedrolsoares.marketplace.model.Address;
 import com.pedrolsoares.marketplace.model.Storage;
 import com.pedrolsoares.marketplace.service.StorageService;
@@ -64,6 +65,13 @@ public class StorageController {
         Storage storage = storageService.findById(id);
 
         return assembler.toModel(storage);
+    }
+
+    @PostMapping("/{id}")
+    public EntityModel<Storage> addProducts(@PathVariable Long id, @RequestBody @Valid StorageProductsDTO productsDTO) {
+        Storage updatedStorage = storageService.addProducts(id, productsDTO.getProducts());
+
+        return assembler.toModel(updatedStorage);
     }
 
 
