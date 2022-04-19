@@ -82,7 +82,7 @@ public class StorageController {
 
     @GetMapping("/{id}")
     @Cacheable(value = "getStorage")
-    public Object getStorage(@PathVariable Long id){
+    public EntityModel<Storage> getStorage(@PathVariable Long id){
         Storage storage = storageService.findById(id);
 
         return assembler.toModel(storage);
