@@ -1,17 +1,20 @@
 package com.pedrolsoares.marketplace.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Storage {
+public class Storage implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +26,7 @@ public class Storage {
     @Embedded
     private Address location;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Product> products;
 
     public Storage(String name, Address location, List<Product> products) {

@@ -3,6 +3,7 @@ package com.pedrolsoares.marketplace.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pedrolsoares.marketplace.dto.request.StorageDTO;
 import com.pedrolsoares.marketplace.dto.request.StorageProductsDTO;
+import com.pedrolsoares.marketplace.dto.response.StorageResponseDTO;
 import com.pedrolsoares.marketplace.model.Address;
 import com.pedrolsoares.marketplace.model.Storage;
 import com.pedrolsoares.marketplace.service.StorageService;
@@ -10,6 +11,7 @@ import com.pedrolsoares.marketplace.util.AddressUtils;
 import com.pedrolsoares.marketplace.assembler.StorageAssembler;
 import com.pedrolsoares.marketplace.util.IntegerUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -79,7 +81,8 @@ public class StorageController {
     }
 
     @GetMapping("/{id}")
-    public EntityModel<Storage> getStorage(@PathVariable Long id){
+    @Cacheable(value = "teste", key = "#id")
+    public Object getStorage(@PathVariable Long id){
         Storage storage = storageService.findById(id);
 
         return assembler.toModel(storage);
