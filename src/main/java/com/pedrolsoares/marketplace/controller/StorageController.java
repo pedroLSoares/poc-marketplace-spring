@@ -81,7 +81,7 @@ public class StorageController {
     }
 
     @GetMapping("/{id}")
-    @Cacheable(value = "teste", key = "#id")
+    @Cacheable(value = "getStorage")
     public Object getStorage(@PathVariable Long id){
         Storage storage = storageService.findById(id);
 
