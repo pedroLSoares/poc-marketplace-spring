@@ -8,10 +8,13 @@ import com.pedrolsoares.marketplace.model.Storage;
 import com.pedrolsoares.marketplace.service.StorageService;
 import com.pedrolsoares.marketplace.util.AddressUtils;
 import com.pedrolsoares.marketplace.assembler.StorageAssembler;
+import com.pedrolsoares.marketplace.util.IntegerUtils;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -51,13 +54,28 @@ public class StorageController {
     }
 
     @GetMapping
-    public CollectionModel<EntityModel<Storage>> listAllStorage(){
-        List<Storage> storageList = storageService.listStorage();
+    public CollectionModel<EntityModel<Storage>> listAllStorage(
+            @RequestParam(required = false, defaultValue = "0", value = "page") String pageNumber,
+            @RequestParam(required = false, defaultValue = "10", value = "size") String sizeNumber
+    ){
+        Integer page = IntegerUtils.parseToInt(pageNumber, 0, false);
+        Integer size = IntegerUtils.parseToInt(sizeNumber, 10, false);
+        Page<Storage> storageList = storageService.listStorage(page > 0 ? page - 1 : page, size);
 
         List<EntityModel<Storage>> storages = storageList.stream().map(assembler::toModel).collect(Collectors.toList());
 
-        return CollectionModel.of(storages,
-                linkTo(methodOn(StorageController.class).listAllStorage()).withSelfRel());
+
+        List<Link> links = new ArrayList<>(List.of(
+                linkTo(methodOn(StorageController.class).listAllStorage(pageNumber, sizeNumber)).withSelfRel()
+        ));
+
+        if(storageList.getTotalPages() > page + 1){
+            links.add(linkTo(methodOn(StorageController.class).listAllStorage(String.valueOf(page + 1), sizeNumber)).withRel("next_page"));
+        }
+
+
+        return CollectionModel.of(storages,links);
+
     }
 
     @GetMapping("/{id}")

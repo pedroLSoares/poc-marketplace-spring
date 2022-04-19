@@ -6,6 +6,8 @@ import com.pedrolsoares.marketplace.repository.ProductRepository;
 import com.pedrolsoares.marketplace.repository.StorageRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.PropertyNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +24,8 @@ public class StorageService {
         return storageRepository.save(storage);
     }
 
-    public List<Storage> listStorage(){
-        return storageRepository.findAll();
+    public Page<Storage> listStorage(final Integer page, final Integer size){
+        return storageRepository.findAll(PageRequest.of(page, size));
     }
 
     public Storage findById(final Long id){
@@ -31,7 +33,6 @@ public class StorageService {
 
         return optionalStorage.orElseThrow(() -> new PropertyNotFoundException("Storage not found"));
     }
-
 
     public Storage addProducts(Long storageId, List<Long> productsIds){
         List<Product> products = productRepository.findAllById(productsIds);

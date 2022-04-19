@@ -14,7 +14,7 @@ public class StorageAssembler implements RepresentationModelAssembler<Storage, E
     public EntityModel<Storage> toModel(Storage entity) {
         return EntityModel.of(entity,
                 linkTo(methodOn(StorageController.class).getStorage(entity.getId())).withSelfRel(),
-                linkTo(methodOn(StorageController.class).listAllStorage()).withRel("storages")
+                linkTo(methodOn(StorageController.class).listAllStorage("1", "10")).withRel("storages")
                 );
     }
 }
