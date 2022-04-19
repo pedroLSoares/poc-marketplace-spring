@@ -9,13 +9,10 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 @Service
-@AllArgsConstructor
 public class PaymentService {
 
-    private final PaymentType paymentType;
-    private final BigDecimal value;
 
-    public String processPayment() {
+    public String processPayment(PaymentType paymentType, BigDecimal value) {
         Map<PaymentType, Callable<?>> translationMap = Map.of(
                 PaymentType.CREDIT_CARD, this::creditCardPayment,
                 PaymentType.DEBIT_CART, this::debitCardPayment,

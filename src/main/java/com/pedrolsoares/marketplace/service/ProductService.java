@@ -21,7 +21,7 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final com.pedrolsoares.marketplace.repository.elasticsearch.ProductRepository esProductRepository;
+    private final com.pedrolsoares.marketplace.repository.elasticsearch.EsProductRepository esProductRepository;
     private final UserRepository userRepository;
 
     public Product findOne(Long id){

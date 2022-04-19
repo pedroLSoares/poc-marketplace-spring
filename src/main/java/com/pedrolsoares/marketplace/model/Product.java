@@ -37,6 +37,11 @@ public class Product {
     @Column(nullable = false)
     private Integer quantity;
 
+    @ManyToOne
+    @JoinColumn(name = "storage_id", nullable = true)
+    @JsonIgnoreProperties(value = "products")
+    private Storage storage;
+
     @Column
     private ProductCategory category;
 

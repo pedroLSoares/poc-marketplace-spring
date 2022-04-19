@@ -30,9 +30,9 @@ public class TransactionService {
 
         BigDecimal totalPrice = shoppingCartService.calculateCartPrice(products);
 
-        PaymentService paymentService = new PaymentService(finishPurchaseBody.getPaymentType(), totalPrice);
+        PaymentService paymentService = new PaymentService();
 
-        return paymentService.processPayment();
+        return paymentService.processPayment(finishPurchaseBody.getPaymentType(), totalPrice);
 
     }
 }

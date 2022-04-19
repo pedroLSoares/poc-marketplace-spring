@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends ElasticsearchRepository<ESProduct, String> {
+public interface EsProductRepository extends ElasticsearchRepository<ESProduct, String> {
 
     List<ESProduct> findAllByName(String name);
 }
