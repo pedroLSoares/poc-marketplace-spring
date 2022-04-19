@@ -23,6 +23,15 @@ public class Product {
         this.user = user;
     }
 
+    public Product(String name, BigDecimal price, Integer quantity, Storage storage, ProductCategory category, AppUser user) {
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.storage = storage;
+        this.category = category;
+        this.user = user;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

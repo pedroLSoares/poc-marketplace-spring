@@ -16,16 +16,18 @@ public class AddressUtils {
     public static Address validateAddress(final AddressDTO address) throws JsonProcessingException {
         try{
             RestTemplate restTemplate = new RestTemplate();
-            String result = restTemplate.getForObject(API_URL.concat(address.getZipcode().toString()), String.class);
-            ObjectMapper om = new ObjectMapper();
-            ResponseDTO r = om.readValue(result, ResponseDTO.class);
+            ResponseDTO response = restTemplate.getForObject(API_URL.concat(address.getZipcode().toString()), ResponseDTO.class);
+
+            if(response == null) {
+                throw new AddressNotFoundException("CEP não encontrado");
+            }
 
             return new Address(
                     address.getCountry(),
-                    r.getState(),
-                    r.getCity(),
-                    r.getNeighborhood(),
-                    r.getStreet(),
+                    response.getState(),
+                    response.getCity(),
+                    response.getNeighborhood(),
+                    response.getStreet(),
                     address.getNumber(),
                     address.getZipcode()
             );

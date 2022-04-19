@@ -5,6 +5,7 @@ import com.pedrolsoares.marketplace.enums.ProductCategory;
 import com.pedrolsoares.marketplace.model.AppUser;
 import com.pedrolsoares.marketplace.model.ESProduct;
 import com.pedrolsoares.marketplace.model.Product;
+import com.pedrolsoares.marketplace.model.Storage;
 import com.pedrolsoares.marketplace.repository.ProductRepository;
 import com.pedrolsoares.marketplace.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final com.pedrolsoares.marketplace.repository.elasticsearch.EsProductRepository esProductRepository;
     private final UserRepository userRepository;
+    private final StorageService storageService;
 
     public Product findOne(Long id){
         return productRepository.findById(id).orElseThrow(() -> new PropertyNotFoundException("Product not found"));
@@ -42,6 +44,7 @@ public class ProductService {
 
     public Product registerProduct(ProductDTO newProduct){
         Optional<AppUser> user = userRepository.findByUser_name(newProduct.getSellerUserName());
+        Storage storage = storageService.findById(newProduct.getStorage_id());
 
         if(user.isEmpty()){
             throw new UsernameNotFoundException("User not found");
@@ -51,6 +54,8 @@ public class ProductService {
                 newProduct.getName(),
                 newProduct.getUnitPrice(),
                 newProduct.getQuantity(),
+                storage,
+                newProduct.getCategory(),
                 user.get()
         );
 

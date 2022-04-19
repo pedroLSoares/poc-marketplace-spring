@@ -2,20 +2,24 @@ package com.pedrolsoares.marketplace.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pedrolsoares.marketplace.dto.request.StorageDTO;
-import com.pedrolsoares.marketplace.dto.response.StorageListDTO;
 import com.pedrolsoares.marketplace.model.Address;
 import com.pedrolsoares.marketplace.model.Storage;
 import com.pedrolsoares.marketplace.service.StorageService;
 import com.pedrolsoares.marketplace.util.AddressUtils;
+import com.pedrolsoares.marketplace.assembler.StorageAssembler;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/storage")
@@ -23,6 +27,7 @@ import java.util.List;
 public class StorageController {
 
     private final StorageService storageService;
+    private final StorageAssembler assembler;
 
     @PostMapping
     public ResponseEntity<?> createStorage(@RequestBody @Valid StorageDTO storageDTO, UriComponentsBuilder uriBuilder) throws JsonProcessingException {
@@ -36,18 +41,30 @@ public class StorageController {
 
         Storage created = storageService.createStorage(storageToCreate);
 
-        URI uri = uriBuilder.path("/api/v1/storage/{id}").buildAndExpand(created.getId()).toUri();
+        EntityModel<Storage> entityModel = assembler.toModel(created);
 
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity
+                .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
+                .body(entityModel);
+
     }
 
     @GetMapping
-    public ResponseEntity<?> listAllStorage(UriComponentsBuilder uriBuilder){
+    public CollectionModel<EntityModel<Storage>> listAllStorage(){
         List<Storage> storageList = storageService.listStorage();
 
-        List<StorageListDTO> responseList = StorageListDTO.modelToDto(storageList, uriBuilder, "/api/v1/storage");
+        List<EntityModel<Storage>> storages = storageList.stream().map(assembler::toModel).collect(Collectors.toList());
 
-        return ResponseEntity.ok(responseList);
+        return CollectionModel.of(storages,
+                linkTo(methodOn(StorageController.class).listAllStorage()).withSelfRel());
     }
+
+    @GetMapping("/{id}")
+    public EntityModel<Storage> getStorage(@PathVariable Long id){
+        Storage storage = storageService.findById(id);
+
+        return assembler.toModel(storage);
+    }
+
 
 }
