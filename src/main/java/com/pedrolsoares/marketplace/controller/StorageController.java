@@ -3,7 +3,6 @@ package com.pedrolsoares.marketplace.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.pedrolsoares.marketplace.dto.request.StorageDTO;
 import com.pedrolsoares.marketplace.dto.request.StorageProductsDTO;
-import com.pedrolsoares.marketplace.dto.response.StorageResponseDTO;
 import com.pedrolsoares.marketplace.model.Address;
 import com.pedrolsoares.marketplace.model.Storage;
 import com.pedrolsoares.marketplace.service.StorageService;
@@ -19,7 +18,6 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import javax.validation.Valid;
@@ -36,7 +34,7 @@ public class StorageController {
     private final StorageAssembler assembler;
 
     @PostMapping
-    public ResponseEntity<?> createStorage(@RequestBody @Valid StorageDTO storageDTO, UriComponentsBuilder uriBuilder) throws JsonProcessingException {
+    public ResponseEntity<?> createStorage(@RequestBody @Valid StorageDTO storageDTO) throws JsonProcessingException {
         Address address = AddressUtils.validateAddress(storageDTO.getLocation());
 
         Storage storageToCreate = new Storage(
@@ -56,6 +54,7 @@ public class StorageController {
     }
 
     @GetMapping
+    @Cacheable("listAllStorage")
     public CollectionModel<EntityModel<Storage>> listAllStorage(
             @RequestParam(required = false, defaultValue = "0", value = "page") String pageNumber,
             @RequestParam(required = false, defaultValue = "10", value = "size") String sizeNumber

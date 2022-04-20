@@ -1,9 +1,6 @@
 package com.pedrolsoares.marketplace.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.pedrolsoares.marketplace.enums.ProductCategory;
 import lombok.*;
 
@@ -59,9 +56,8 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("id")
     @JsonIgnoreProperties({"password"})
+    @JsonBackReference
     private AppUser user;
 
 

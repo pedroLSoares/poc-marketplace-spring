@@ -6,7 +6,6 @@ import com.pedrolsoares.marketplace.repository.ProductRepository;
 import com.pedrolsoares.marketplace.repository.StorageRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.PropertyNotFoundException;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ public class StorageService {
         return storageRepository.save(storage);
     }
 
-    @Cacheable("listStorage")
     public Page<Storage> listStorage(final Integer page, final Integer size){
         return storageRepository.findAll(PageRequest.of(page, size));
     }

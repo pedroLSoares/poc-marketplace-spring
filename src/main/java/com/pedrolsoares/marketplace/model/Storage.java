@@ -1,10 +1,9 @@
 package com.pedrolsoares.marketplace.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,7 +25,8 @@ public class Storage implements Serializable {
     @Embedded
     private Address location;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "storage")
+    @JsonIgnoreProperties({"storage", "quantityRequested"})
     private List<Product> products;
 
     public Storage(String name, Address location, List<Product> products) {

@@ -23,8 +23,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Object> listAll(@RequestParam String search){
-        List<ESProduct> products = productService.listAll(search);
+    public ResponseEntity<Object> listAll(@RequestParam(required = false) String search){
+        List<ESProduct> products = search == null ? productService.listAll() :  productService.listAll(search);
 
         return ResponseEntity.ok(products);
     }
